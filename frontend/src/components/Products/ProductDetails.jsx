@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../../styles/styles";
 import {
@@ -7,12 +7,25 @@ import {
   AiOutlineMessage,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
+import { backend_url } from "../../server";
+import { useDispatch, useSelector } from "react-redux";
+import { loadProductsForShop } from "../../redux/actions/product";
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "../../redux/actions/wishlist";
+import { toast } from "react-toastify";
+import { addToCart } from "../../redux/actions/cart";
+import Ratings from "./Ratings";
 
 function ProductDetails({ data }) {
+  const { wishlist } = useSelector((state) => state.wishlist);
+  const { cart } = useSelector((state) => state.cart);
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
-  const [select, setSelect] = useState(1);
+  const [select, setSelect] = useState(0);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const decrementCount = () => {
     if (count > 1) {
@@ -24,9 +37,41 @@ function ProductDetails({ data }) {
     setCount(count + 1);
   };
 
-  const handleMessageSubmit = () => {
-    navigate("/inbox?conversation=507ejsjkbbvj");
+  const handleMessageSubmit = () => {};
+
+  const removeFromwishlistHandler = (data) => {
+    setClick(!click);
+    dispatch(removeFromWishlist(data));
   };
+
+  const addToWishlistHandler = (data) => {
+    setClick(!click);
+    dispatch(addToWishlist(data));
+  };
+
+  const addToCartHandler = (id) => {
+    const isItemExist = cart && cart.find((i) => i._id === id);
+
+    if (isItemExist) {
+      toast.error("Item already in cart!");
+    } else {
+      if (data.stock < count) {
+        toast.error("Product stock is limited");
+      } else {
+        const cartData = { ...data, qty: count };
+        dispatch(addToCart(cartData));
+        toast.success("Item added to cart!");
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (wishlist && wishlist.find((i) => i._id === data._id)) {
+      setClick(true);
+    } else {
+      setClick(false);
+    }
+  }, [wishlist]);
 
   return (
     <div className="bg-white pb-10">
@@ -36,7 +81,7 @@ function ProductDetails({ data }) {
             <div className="block w-full 800px:flex">
               <div className="w-full 800px:w-[50%]">
                 <img
-                  src={data.image_Url[select].url}
+                  src={`${backend_url}/${data.images[select]}`}
                   alt=""
                   className="w-[80%]"
                 />
@@ -48,7 +93,7 @@ function ProductDetails({ data }) {
                       } cursor-default`}
                     >
                       <img
-                        src={data?.image_Url[0].url}
+                        src={`${backend_url}/${data.images[0]}`}
                         alt=""
                         className="h-[200px] "
                         onClick={() => setSelect(0)}
@@ -61,7 +106,7 @@ function ProductDetails({ data }) {
                       } cursor-default`}
                     >
                       <img
-                        src={data?.image_Url[1].url}
+                        src={`${backend_url}/${data.images[1]}`}
                         alt=""
                         className="h-[200px] "
                         onClick={() => setSelect(1)}
@@ -75,10 +120,10 @@ function ProductDetails({ data }) {
                 <p>{data.description}</p>
                 <div className="flex pt-3">
                   <h4 className={`${styles.productDiscountPrice}`}>
-                    {data.discount_price} $
+                    {data.discountPrice} $
                   </h4>
                   <h3 className={`${styles.price}`}>
-                    {data.price && data.price + " $"}
+                    {data.originalPrice && data.originalPrice + " $"}
                   </h3>
                 </div>
                 <div
@@ -107,7 +152,7 @@ function ProductDetails({ data }) {
                       <AiFillHeart
                         size={30}
                         className="cursor-pointer "
-                        onClick={() => setClick(!click)}
+                        onClick={() => removeFromwishlistHandler(data)}
                         color="red"
                         title="Remove from Wishlist "
                       />
@@ -115,7 +160,7 @@ function ProductDetails({ data }) {
                       <AiOutlineHeart
                         size={30}
                         className="cursor-pointer "
-                        onClick={() => setClick(!click)}
+                        onClick={() => addToWishlistHandler(data)}
                         color="#333"
                         title="Add to a Wishlist"
                       />
@@ -123,24 +168,27 @@ function ProductDetails({ data }) {
                   </div>
                 </div>
                 <div
+                  onClick={() => addToCartHandler(data)}
                   className={`${styles.button} !mt-6 !rounded h-11 text-white bg-black ${styles.noramalFlex}`}
                 >
                   <span>Add To Cart</span>
                   <AiOutlineShoppingCart className="ml-1" />
                 </div>
                 <div className="flex items-center pt-8">
-                  <img
-                    src={data.shop.shop_avatar.url}
-                    className="w-12 h-12 rounded-full mr-2"
-                    alt=""
-                  />
+                  <Link to={`/shop/preview/${data?.shop._id}`}>
+                    <img
+                      src={`${backend_url}/${data?.shop?.avatar}`}
+                      alt=""
+                      className="w-[50px] h-[50px] rounded-full mr-2"
+                    />
+                  </Link>
                   <div className="pr-8">
-                    <h3 className={`${styles.shop_name} pb-1 pt-1`}>
-                      {data.shop.name}
-                    </h3>
-                    <h5 className="pb-3 text-base">
-                      ({data.shop.ratings}) Ratings
-                    </h5>
+                    <Link to={`/shop/preview/${data?.shop._id}`}>
+                      <h3 className={`${styles.shop_name} pb-1 pt-1`}>
+                        {data.shop.name}
+                      </h3>
+                    </Link>
+                    <h5 className="pb-3 text-base">{/* ({}/5) Ratings */}</h5>
                   </div>
 
                   <div
@@ -165,7 +213,27 @@ function ProductDetails({ data }) {
 
 const ProductDeatilsInfo = ({ data }) => {
   const [active, setActive] = useState(1);
+  const { products } = useSelector((state) => state.product);
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(loadProductsForShop(data && data?.shop._id));
+  }, [data]);
+
+  const totalReviewsLength =
+    products &&
+    products.reduce((acc, product) => acc + product.reviews.length, 0);
+
+  const totalRatings =
+    (products &&
+      products.reduce(
+        (acc, product) =>
+          acc + product.reviews.reduce((sum, review) => sum + review.rating, 0),
+        0
+      )) ||
+    0;
+
+  const averageRatings = totalRatings / totalReviewsLength;
   return (
     <div className="bg-[#f5f6fb] px-3 800px:px-10 py-2 rounded">
       <div className="w-full flex justify-between border-b pt-10 pb-2">
@@ -209,47 +277,71 @@ const ProductDeatilsInfo = ({ data }) => {
       )}
 
       {active === 2 && (
-        <div className="w-full justify-center min-h-[40vh] flex items-center">
-          <p>No Reviews yet!</p>
+        <div className="w-full min-h-[40vh] flex flex-col items-center py-3 overflow-y-scroll">
+          {data &&
+            data.reviews.map((item, index) => (
+              <div className="w-full flex my-2 items-center">
+                <img
+                  src={`${backend_url}/${item.user.avatar}`}
+                  className="w-14 h-14 rounded-full"
+                  alt=""
+                />
+                <div className="pl-3">
+                  <div className="w-full">
+                    <h1 className="font-bold">{item.user.name}</h1>
+                    <Ratings rating={item.rating} />
+                  </div>
+                  <p>{item.comment}</p>
+                </div>
+              </div>
+            ))}
+
+          <div className="w-full flex justify-center">
+            {data && data.reviews.length == 0 && <h5>No Reviews yet!</h5>}
+          </div>
         </div>
       )}
 
       {active === 3 && (
         <div className="w-full block 800px:flex p-5">
           <div className="w-full 800px:w-[50%]">
-            <div className="flex items-center">
-              <img
-                src={data.shop.shop_avatar.url}
-                alt=""
-                className="w-12 h-12 rounded-full "
-              />
-            </div>
-            <div className="pl-3">
-              <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
-              <h5 className="pb-2 text-base">({data.shop.ratings}) Ratings</h5>
-            </div>
-            <p className="pt-2 ">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-              reprehenderit ex perferendis dolor magnam vero quidem,
-              consequuntur ipsum molestiae itaque vitae incidunt esse voluptatum
-              eius nesciunt neque odit laudantium obcaecati vel repudiandae
-              optio? Nulla deserunt rerum illum, blanditiis repellendus alias
-              fugit vero dolorem eius vitae ad quasi, eos at impedit?
-            </p>
+            <Link to={`/shop/preview/${data.shop._id}`}>
+              <div className="flex items-center">
+                <img
+                  src={`${backend_url}/${data?.shop?.avatar}`}
+                  className="w-[50px] h-[50px] rounded-full"
+                  alt=""
+                />
+                <div className="pl-3">
+                  <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
+                  <h5 className="pb-2 text-[15px]">
+                    ({averageRatings}/5) Ratings
+                  </h5>
+                </div>
+              </div>
+            </Link>
+            <p className="pt-2 ">{data.shop.description}</p>
           </div>
 
           <div className="w-full 800px:w-[50%] mt-5 800px:mt-0 800px:flex flex-col items-end">
             <div className="text-left">
               <h5 className="font-semibold">
-                Joined on: <span className="font-normal">14 March, 2023</span>
+                Joined on:{" "}
+                <span className="font-normal">
+                  {data.shop?.createdAt?.slice(0, 10)}
+                </span>
               </h5>
 
               <h5 className="font-semibold pt-3">
-                Total Products: <span className="font-normal">1.223</span>
+                Total Products:{" "}
+                <span className="font-normal">
+                  {products && products.length}
+                </span>
               </h5>
 
               <h5 className="font-semibold">
-                Total Reviews: <span className="font-normal">131</span>
+                Total Reviews:{" "}
+                <span className="font-normal">{totalReviewsLength}</span>
               </h5>
 
               <Link to="/">
