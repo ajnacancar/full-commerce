@@ -5,7 +5,7 @@ import Footer from "../components/Layout/Footer";
 
 function EventsPage() {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <Header activeHeading={4} />
       <EventCard active={true} />
       <Footer />

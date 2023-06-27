@@ -122,7 +122,7 @@ function ShopProfileData({ isOwner }) {
                     <Ratings rating={item.rating} />
                   </div>
                   <p className="font-[400] text-[#000000a7]">{item?.comment}</p>
-                  <p className="text-[#000000a7] text-[14px]">{"2days ago"}</p>
+                  <p className="text-[#000000a7] text-[14px]">{item.createdAt.slice(0,10)}</p>
                 </div>
               </div>
             ))}

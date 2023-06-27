@@ -232,9 +232,9 @@ router.put(
 
       const existAvatarPath = `uploads/${existsUser.avatar}`;
 
-      fs.unlink(existAvatarPath);
+      fs.unlinkSync(existAvatarPath);
 
-      const fileUrl = path.json(req.file.filename);
+      const fileUrl = path.join(req.file.filename);
 
       const user = await UserModel.findByIdAndUpdate(req.user.id, {
         avatar: fileUrl,
@@ -346,6 +346,23 @@ router.put(
       res.status(200).json({
         success: true,
         message: "Paswword updated successufly",
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// find user by id
+router.get(
+  "/get-user-info/:id",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const user = await UserModel.findById(req.params.id);
+
+      res.status(200).json({
+        success: true,
+        user,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));

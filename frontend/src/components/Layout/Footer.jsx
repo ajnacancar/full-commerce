@@ -12,7 +12,7 @@ import { footerSupportLinks } from "../../static/data";
 
 function Footer() {
   return (
-    <div className="bg-black text-white">
+    <div className="bg-black text-white mt-auto">
       <div className="md:flex md:justify-between md:items-center sm:px-12 px-4 bg-[#342ac8] py-7 ">
         <h1 className="lg:text-xl text-3xl md:mb-0 mb-6 lg:leading-normal font-semibold md:w-2/5">
           <span className="text-[#56d879]">Subscribe</span> us for get news{" "}

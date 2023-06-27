@@ -8,10 +8,12 @@ import { VscNewFile } from "react-icons/vsc";
 import { CiMoneyBill, CiSettings } from "react-icons/ci";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { HiOutlineReceiptRefund } from "react-icons/hi";
+import { useSelector } from "react-redux";
 
 function DashboardSidebar({ active }) {
+  const {shop} = useSelector((state) => state.shop)
   return (
-    <div className="h-[90vh] w-full bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-10">
+    <div className="h-[100vh] w-full bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-10">
       {/* Single item */}
       <div className="w-full flex items-center p-4">
         <Link to="/dashboard" className="w-full flex items-center">
@@ -184,7 +186,7 @@ function DashboardSidebar({ active }) {
 
       {/* Single item */}
       <div className="w-full flex items-center p-4">
-        <Link to="/dashboard/cupons" className="w-full flex items-center">
+        <Link to={`/shop/${shop._id}/settings`} className="w-full flex items-center">
           <CiSettings
             size={30}
             color={`${active == 11 ? "crimson" : "#555"}`}

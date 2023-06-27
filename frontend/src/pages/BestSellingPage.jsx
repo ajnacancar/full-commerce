@@ -15,7 +15,7 @@ function BestSellingPage() {
   }, []);
   
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <Header activeHeading={2} />{" "}
       <div className={`${styles.section} mt-12`}>
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-6 xl:grid-cols-5 xl:gap-6 mb-12 border-0">

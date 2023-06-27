@@ -8,13 +8,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineCamera, AiOutlineDelete } from "react-icons/ai";
 import styles from "../../styles/styles";
 import { DataGrid } from "@material-ui/data-grid";
-import { columns_table_order_user, columns_table_track_order_user } from "../../static/static_data";
+import {
+  columns_table_order_user,
+  columns_table_track_order_user,
+} from "../../static/static_data";
 import { ordersData } from "../../static/data";
 import {
   updateUserAddress,
   updateUserInformation,
   clearErrors,
   deleteUserAddress,
+  loadUser,
 } from "../../redux/actions/user";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -64,7 +68,7 @@ function ProfileContent({ active }) {
         withCredentials: true,
       })
       .then((response) => {
-        window.location.reload(true);
+        dispatch(loadUser());
       })
       .catch((error) => {
         toast.error(error);

@@ -13,6 +13,8 @@ const event = require("./controllers/event");
 const coupon = require("./controllers/coupon_code");
 const payment = require("./controllers/payment");
 const order = require("./controllers/order");
+const conversation = require("./controllers/conversation");
+const message = require("./controllers/message");
 
 app.use(express.json());
 app.use(cookieParser());
@@ -40,6 +42,8 @@ app.use("/api/v2/event", event);
 app.use("/api/v2/coupon", coupon);
 app.use("/api/v2/payment", payment);
 app.use("/api/v2/order", order);
+app.use("/api/v2/conversation", conversation);
+app.use("/api/v2/message", message);
 
 //error handeling
 app.use(ErrorHandler);

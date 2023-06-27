@@ -9,6 +9,7 @@ const ORDER_STATUS_RECIVED = "Received";
 const ORDER_STATUS_ON_THE_WAY = "On the way";
 const ORDER_STATUS_DELIVERED = "Delivered";
 const ORDER_STATUS_PROCESSING_REFUND = "Processing refund";
+const ORDER_STATUS_REFUND_SUCCESS = "Refund success";
 
 module.exports = {
   SHOP_TOKEN,
@@ -20,4 +21,5 @@ module.exports = {
   ORDER_STATUS_SHIPPING,
   ORDER_STATUS_TRANSFER_TO_DELIVERY_PARTNET,
   ORDER_STATUS_PROCESSING_REFUND,
+  ORDER_STATUS_REFUND_SUCCESS,
 };

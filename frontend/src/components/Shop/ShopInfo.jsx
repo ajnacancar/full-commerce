@@ -1,12 +1,37 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { backend_url, server } from "../../server";
 import styles from "../../styles/styles";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Link, useParams } from "react-router-dom";
+import { loadProductsForShop } from "../../redux/actions/product";
 
 function ShopInfo({ isOwner }) {
-  const { loading, shop } = useSelector((state) => state.shop);
+  const { shop } = useSelector((state) => state.shop);
+  const { products } = useSelector((state) => state.product);
+  const [loading, setLoading] = useState(false);
+  const { id } = useParams();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadProductsForShop(shop._id));
+  }, [dispatch]);
+
+  const totalReviewsLength =
+    products &&
+    products.reduce((acc, product) => acc + product.reviews.length, 0);
+
+  const totalRatings =
+    (products &&
+      products.reduce(
+        (acc, product) =>
+          acc + product.reviews.reduce((sum, review) => sum + review.rating, 0),
+        0
+      )) ||
+    0;
+
+  const averageRatings = totalRatings / totalReviewsLength;
 
   const logouthandler = async () => {
     await axios
@@ -41,12 +66,12 @@ function ShopInfo({ isOwner }) {
 
       <div className="p-3">
         <h5 className="font-semibold">Total Products</h5>
-        <h4 className="text-black">10</h4>
+        <h4 className="text-black">{products && products.length}</h4>
       </div>
 
       <div className="p-3">
         <h5 className="font-semibold">Shop Rating</h5>
-        <h4 className="text-black">4/5</h4>
+        <h4 className="text-black">{averageRatings}/5</h4>
       </div>
 
       <div className="p-3">
@@ -56,9 +81,11 @@ function ShopInfo({ isOwner }) {
 
       {isOwner && (
         <div className="py-3 px-4">
-          <div className={`${styles.button} w-full h-11 rounded`}>
-            <span className="text-white">Edit Shop</span>
-          </div>
+          <Link to={`/shop/${shop._id}/settings`}>
+            <div className={`${styles.button} w-full h-11 rounded`}>
+              <span className="text-white">Edit Shop</span>
+            </div>
+          </Link>
 
           <div
             onClick={logouthandler}

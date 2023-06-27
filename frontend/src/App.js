@@ -1,10 +1,4 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  useNavigate,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {
   LoginPage,
   SignUpPage,
@@ -22,7 +16,8 @@ import {
   LoginShopPage,
   OrderSuccessPage,
   UserOrderDetailsPage,
-  UserTrackOrderPage
+  UserTrackOrderPage,
+  UserInboxPage
 } from "./routes/Routes.js";
 import {
   ShopHomePage,
@@ -36,6 +31,10 @@ import {
   PaymentPage,
   AllShopOrdersPage,
   ShopOrderDetailsPage,
+  ShopRefundsPage,
+  ShopSettingsPage,
+  ShopWithdrawMoneyPage,
+  ShopInboxPage,
 } from "./routes/ShopRoutes.js";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -128,6 +127,18 @@ function App() {
                 />
               }
             />
+
+            <Route
+              path="/inbox"
+              element={
+                <ProtectedRoute
+                  isLoading={loading}
+                  redirectTo="login"
+                  isAuthenticated={isAuthenticated}
+                  children={<UserInboxPage />}
+                />
+              }
+            />
             <Route
               path="/checkout"
               element={
@@ -153,6 +164,18 @@ function App() {
             />
 
             <Route
+              path="/shop/:id/settings"
+              element={
+                <ProtectedRoute
+                  isLoading={isSellerloading}
+                  redirectTo="login-shop"
+                  isAuthenticated={isAuthenticatedShop}
+                  children={<ShopSettingsPage />}
+                />
+              }
+            />
+
+            <Route
               path="/dashboard/cupons"
               element={
                 <ProtectedRoute
@@ -160,6 +183,18 @@ function App() {
                   redirectTo="login-shop"
                   isAuthenticated={isAuthenticatedShop}
                   children={<ShopAllCoupons />}
+                />
+              }
+            />
+
+            <Route
+              path="/dashboard/refunds"
+              element={
+                <ProtectedRoute
+                  isLoading={isSellerloading}
+                  redirectTo="login-shop"
+                  isAuthenticated={isAuthenticatedShop}
+                  children={<ShopRefundsPage />}
                 />
               }
             />
@@ -220,6 +255,30 @@ function App() {
                   redirectTo="login-shop"
                   isAuthenticated={isAuthenticatedShop}
                   children={<ShopCreateEventPage />}
+                />
+              }
+            />
+
+            <Route
+              path="/dashboard/messages"
+              element={
+                <ProtectedRoute
+                  isLoading={isSellerloading}
+                  redirectTo="login-shop"
+                  isAuthenticated={isAuthenticatedShop}
+                  children={<ShopInboxPage />}
+                />
+              }
+            />
+
+            <Route
+              path="/dashboard/withdraw-money"
+              element={
+                <ProtectedRoute
+                  isLoading={isSellerloading}
+                  redirectTo="login-shop"
+                  isAuthenticated={isAuthenticatedShop}
+                  children={<ShopWithdrawMoneyPage />}
                 />
               }
             />

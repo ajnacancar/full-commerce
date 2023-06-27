@@ -3,5 +3,7 @@ backend/package-lock.json
 frontend/node_modules/
 frontend/package-lock.json
 backend/uploads/*
+socket/node_modules/
+socket/package-lock.json
 node_modules
 package-lock.json

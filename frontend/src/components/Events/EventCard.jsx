@@ -23,48 +23,57 @@ function EventCard({ active, data }) {
     }
   };
   return (
-    <div
-      className={`w-full block bg-white rounded-lg ${
-        active ? "unset" : "mb-12"
-      } lg:flex p-2`}
-    >
-      <div className="w-full lg:w-[50%] m-auto">
-        <img src={`${backend_url}/${data.images[0]}`} alt="" />
-      </div>
-
-      <div className="w-full lg:w-[50%] flex flex-col justify-center">
-        <h2 className={`${styles.productTitle}`}>{data.name}</h2>
-        <p>{data.description}</p>
-
-        <div className="flex py-2 justify-between">
-          <div className="flex">
-            <h5 className="font-bold text-lg text-[#d55b45] pr-3 line-through">
-              {data.originalPrice} $
-            </h5>
-            <h5 className="font-bold text-xl text-gray-700 font-Roboto">
-              {data.discountPrice} $
-            </h5>
+    <>
+    {!data && <div className="w-full mt-12 flex justify-center items-center">
+      <p>There is no events yet!</p>
+    </div> }
+      {data && (
+        <div
+          className={`w-full block bg-white rounded-lg ${
+            active ? "unset" : "mb-12"
+          } lg:flex p-2`}
+        >
+          <div className="w-full lg:w-[50%] m-auto">
+            <img src={`${backend_url}/${data.images[0]}`} alt="" />
           </div>
-          <span className="pr-3 font-normal text-lg text-[#44a55e]">
-            {data.sold_out}
-          </span>
-        </div>
-        <CountDown data={data} />
 
-        <div className="flex items-center space-x-5">
-          <Link to={`/product/${data._id}?isEvent=true`}>
-            <div className={`${styles.button} text-white`}>See Detailes</div>
-          </Link>
+          <div className="w-full lg:w-[50%] flex flex-col justify-center">
+            <h2 className={`${styles.productTitle}`}>{data.name}</h2>
+            <p>{data.description}</p>
 
-          <div
-            className={`${styles.button} text-white`}
-            onClick={(e) => addToCartHandler(data)}
-          >
-            Add to Cart
+            <div className="flex py-2 justify-between">
+              <div className="flex">
+                <h5 className="font-bold text-lg text-[#d55b45] pr-3 line-through">
+                  {data.originalPrice} $
+                </h5>
+                <h5 className="font-bold text-xl text-gray-700 font-Roboto">
+                  {data.discountPrice} $
+                </h5>
+              </div>
+              <span className="pr-3 font-normal text-lg text-[#44a55e]">
+                {data.sold_out}
+              </span>
+            </div>
+            <CountDown data={data} />
+
+            <div className="flex items-center space-x-5">
+              <Link to={`/product/${data._id}?isEvent=true`}>
+                <div className={`${styles.button} text-white`}>
+                  See Detailes
+                </div>
+              </Link>
+
+              <div
+                className={`${styles.button} text-white`}
+                onClick={(e) => addToCartHandler(data)}
+              >
+                Add to Cart
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
 

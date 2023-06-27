@@ -3,10 +3,7 @@ import DashboardHeader from "../../components/Shop/Layout/DashboardHeader";
 import DashboardSidebar from "../../components/Shop/Layout/DashboardSidebar";
 import CreateProduct from "../../components/Shop/CreateProduct.jsx";
 
-
 function ShopCreateProductPage() {
-
-
   return (
     <div>
       <DashboardHeader />

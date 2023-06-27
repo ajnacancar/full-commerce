@@ -127,7 +127,7 @@ router.post(
       const shop = await ShopModel.findOne({ email }).select("+password");
 
       if (!shop) {
-        return next(new ErrorHandler("User doesn't exists!", 400));
+        return next(new ErrorHandler("Shop doesn't exists!", 400));
       }
 
       const isPasswordValid = await shop.comparePassword(password);
@@ -190,4 +190,82 @@ router.get(
   })
 );
 
+// update profile shop picture
+router.put(
+  "/update-shop-avatar",
+  isAuthenticatedShop,
+  upload.single("file"),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const existShop = await ShopModel.findById(req.shop._id);
+
+      const existAvatarPath = `uploads/${existShop.avatar}`;
+      fs.unlinkSync(existAvatarPath);
+
+      const fileUrl = path.join(req.file.filename);
+
+      const shop = await ShopModel.findByIdAndUpdate(req.shop._id, {
+        avatar: fileUrl,
+      });
+
+      res.status(200).json({
+        success: true,
+        shop,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// update shop information
+router.put(
+  "/update-shop-info",
+  isAuthenticatedShop,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { name, description, address, phoneNumber, zipCode } = req.body;
+
+      const shop = await ShopModel.findById(req.shop._id);
+
+      if (!shop) {
+        return next(new ErrorHandler("Shop doesn't exist", 400));
+      }
+
+      shop.name = name;
+      shop.phoneNumber = phoneNumber;
+      shop.description = description;
+      shop.address = address;
+      shop.zipCode = zipCode;
+
+      await shop.save();
+
+      res.status(201).json({
+        success: true,
+        shop,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+
+
+// find shop by id
+router.get(
+  "/get-shop-info/:id",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const shop = await ShopModel.findById(req.params.id);
+
+      res.status(200).json({
+        success: true,
+        shop,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
 module.exports = router;

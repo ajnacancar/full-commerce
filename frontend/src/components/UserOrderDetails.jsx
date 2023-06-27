@@ -59,6 +59,7 @@ function UserOrderDetails() {
       )
       .then((res) => {
         toast.success(res.data.message);
+        dispatch(loadAllOrdersForUser(user._id));
       })
       .catch((error) => {
         toast.error(error);
@@ -108,7 +109,8 @@ function UserOrderDetails() {
                     US$ {item.discountPrice} x {item.qty}
                   </div>
                 </div>
-                {item.isReviewed ? null : (
+                {item.isReviewed ||
+                item.status !== ORDER_STATUS_DELIVERED ? null : (
                   <>
                     {data?.status === ORDER_STATUS_DELIVERED && (
                       <div

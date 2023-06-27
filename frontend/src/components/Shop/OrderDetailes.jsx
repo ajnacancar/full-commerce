@@ -8,7 +8,9 @@ import {
   ORDER_STATUS_DELIVERED,
   ORDER_STATUS_ON_THE_WAY,
   ORDER_STATUS_PROCESSING,
+  ORDER_STATUS_PROCESSING_REFUND,
   ORDER_STATUS_RECIVED,
+  ORDER_STATUS_REFUND_SUCCESS,
   ORDER_STATUS_SHIPPING,
   ORDER_STATUS_TRANSFER_TO_DELIVERY_PARTNET,
   backend_url,
@@ -42,6 +44,22 @@ function OrderDetailes() {
       )
       .then((res) => {
         toast.success("Updated status!");
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
+
+  const refundOrderUpdateHandler = async () => {
+    await axios
+      .put(
+        `${server}/order//order-refund-success/${id}`,
+        { status },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        toast.success("Updated status!");
+        dispatch(loadAllOrdersForShop(shop._id));
       })
       .catch((error) => {
         toast.error(error.response.data.message);
@@ -120,27 +138,50 @@ function OrderDetailes() {
           </div>
 
           <h4 className="pt-3 text-xl font-semibold">Order Status: </h4>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="w-[200px] mt-2 border h-[35px] rounded-[5px]"
-          >
-            {[
-              ORDER_STATUS_PROCESSING,
-              ORDER_STATUS_TRANSFER_TO_DELIVERY_PARTNET,
-              ORDER_STATUS_SHIPPING,
-              ORDER_STATUS_RECIVED,
-              ORDER_STATUS_ON_THE_WAY,
-              ORDER_STATUS_DELIVERED,
-            ]
-              .slice(
-                [
+          {data &&
+            data.status !== ORDER_STATUS_PROCESSING_REFUND &&
+            data.status !== ORDER_STATUS_REFUND_SUCCESS && (
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className="w-[200px] mt-2 border h-[35px] rounded-[5px]"
+              >
+                {[
                   ORDER_STATUS_PROCESSING,
                   ORDER_STATUS_TRANSFER_TO_DELIVERY_PARTNET,
                   ORDER_STATUS_SHIPPING,
                   ORDER_STATUS_RECIVED,
                   ORDER_STATUS_ON_THE_WAY,
                   ORDER_STATUS_DELIVERED,
+                ]
+                  .slice(
+                    [
+                      ORDER_STATUS_PROCESSING,
+                      ORDER_STATUS_TRANSFER_TO_DELIVERY_PARTNET,
+                      ORDER_STATUS_SHIPPING,
+                      ORDER_STATUS_RECIVED,
+                      ORDER_STATUS_ON_THE_WAY,
+                      ORDER_STATUS_DELIVERED,
+                    ].indexOf(data?.status)
+                  )
+                  .map((option, index) => (
+                    <option value={option} key={index}>
+                      {option}
+                    </option>
+                  ))}
+              </select>
+            )}
+
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="w-[200px] mt-2 border h-[35px] rounded-[5px]"
+          >
+            {[ORDER_STATUS_PROCESSING_REFUND, ORDER_STATUS_REFUND_SUCCESS]
+              .slice(
+                [
+                  ORDER_STATUS_PROCESSING_REFUND,
+                  ORDER_STATUS_REFUND_SUCCESS,
                 ].indexOf(data?.status)
               )
               .map((option, index) => (
@@ -152,7 +193,11 @@ function OrderDetailes() {
 
           <div
             className={`${styles.button} mt-5 !rounded text-white font-semibold h-11 text-lg`}
-            onClick={orderStatusUpdateHandler}
+            onClick={
+              data.status !== ORDER_STATUS_PROCESSING_REFUND
+                ? orderStatusUpdateHandler
+                : refundOrderUpdateHandler
+            }
           >
             Update status
           </div>
