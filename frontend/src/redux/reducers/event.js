@@ -12,13 +12,13 @@ export const eventReducer = createReducer(initialState, {
   createEventSuccess: (state, action) => {
     state.isLoading = false;
     state.event = action.payload;
-    state.success = true;
+    state.successCreated = true;
   },
   createEventRejeted: (state, action) => {
     state.error = action.payload;
     state.isLoading = false;
     state.event = null;
-    state.success = false;
+    state.successCreated = false;
   },
 
   //load events

@@ -19,7 +19,7 @@ import Wishlist from "../wishlist/Wishlist";
 import { RxCross1 } from "react-icons/rx";
 
 function Header({ activeHeading }) {
-  const { isAuthenticated, user, loading } = useSelector((state) => state.user);
+  const { isAuthenticated, user } = useSelector((state) => state.user);
   const { isAuthenticatedShop } = useSelector((state) => state.shop);
   const { cart } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -112,9 +112,9 @@ function Header({ activeHeading }) {
                 {isAuthenticatedShop ? (
                   "Go to Dashboard"
                 ) : (
-                  <p>
-                    Become Seller <IoIosArrowForward className="ml-1" />
-                  </p>
+                  <div className="flex justify-between items-center">
+                   <p> Become Seller</p> <IoIosArrowForward className="ml-1" />
+                  </div>
                 )}
               </h1>
             </Link>
@@ -230,6 +230,7 @@ function Header({ activeHeading }) {
               <img
                 src="https://shopo.quomodothemes.website/assets/images/logo.svg"
                 className="mt-2"
+                alt=""
               />
             </Link>
           </div>

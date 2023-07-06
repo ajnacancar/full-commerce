@@ -4,16 +4,29 @@ import styles from "../styles/styles";
 import ProductCard from "../components/Route/ProductCard/ProductCard";
 import { productData } from "../static/data";
 import Footer from "../components/Layout/Footer";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { server } from "../server";
 
 function BestSellingPage() {
   const [data, setData] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const d =
-      productData && productData.sort((a, b) => b.total_sell - a.total_sell);
-    setData(d);
-  }, []);
-  
+    const getBestSelling = async () => {
+      await axios
+        .get(`${server}/product/best-selling-products`)
+        .then((res) => {
+          setData(res.data.products);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    getBestSelling();
+  }, [dispatch]);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header activeHeading={2} />{" "}
@@ -27,11 +40,8 @@ function BestSellingPage() {
           </h1>
         )}
       </div>
-
       <Footer />
     </div>
-
-    
   );
 }
 

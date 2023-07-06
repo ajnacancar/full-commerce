@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   AiFillFacebook,
   AiFillInstagram,
@@ -9,8 +9,26 @@ import { footerProductLinks } from "../../static/data";
 import { Link } from "react-router-dom";
 import { footercompanyLinks } from "../../static/data";
 import { footerSupportLinks } from "../../static/data";
+import axios from "axios";
+import { server } from "../../server";
+import { toast } from "react-toastify";
 
 function Footer() {
+  const [email, setEmail] = useState(null);
+
+  const subscribeToNewsletter = async () => {
+    if (email) {
+      await axios
+        .post(`${server}/newsletter/subscribe-to-newsletter`, { email })
+        .then((res) => {
+          toast.success("Email subcribed to newsletter!");
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
+      setEmail("");
+    }
+  };
   return (
     <div className="bg-black text-white mt-auto">
       <div className="md:flex md:justify-between md:items-center sm:px-12 px-4 bg-[#342ac8] py-7 ">
@@ -21,12 +39,17 @@ function Footer() {
 
         <div>
           <input
-            type="text"
+            type="email"
             required
             placeholder="Enter your email..."
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
             className="text-gray-800 sm:w-72 w-full sm:mr-1 lg:mb-0 mb-4 py-2.5 rounded px-2 focus:outline-none"
           />
-          <button className="bg-[#56d879] hover:bg-teal-500 duration-300 px-5 py-2.5 rounded-md text-white md:w-auto w-full">
+          <button
+            onClick={() => subscribeToNewsletter()}
+            className="bg-[#56d879] hover:bg-teal-500 duration-300 px-5 py-2.5 rounded-md text-white md:w-auto w-full"
+          >
             Submit
           </button>
         </div>
@@ -100,7 +123,7 @@ function Footer() {
           ))}
         </ul>
       </div>
-      
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 text-center pt-2 text-gray-400 text-sm pb-8">
         <span>© 2020 Becodemy. All rights reserved.</span>
         <span>Terms · Privacy Policy</span>

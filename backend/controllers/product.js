@@ -164,4 +164,65 @@ router.put(
   })
 );
 
+// best sellings
+router.get(
+  "/best-selling-products",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      let products = await ProductModel.find();
+      const p = products
+        .sort((a, b) => {
+          return b.sold_out - a.sold_out;
+        })
+        .slice(0, 10);
+
+      res.status(200).json({
+        success: true,
+        products: p,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 400));
+    }
+  })
+);
+
+// best deals products
+router.get(
+  "/best-deals-products",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      let products = await ProductModel.find();
+      const p = products
+        .sort((a, b) => {
+          return b.ratings - a.ratings;
+        })
+        .slice(0, 5);
+
+      res.status(200).json({
+        success: true,
+        products: p,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 400));
+    }
+  })
+);
+
+// featured products
+router.get(
+  "/featured-products",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const products = await ProductModel.find().sort({ createdAt: -1 });
+
+      res.status(200).json({
+        success: true,
+        products,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 400));
+    }
+  })
+);
+
 module.exports = router;

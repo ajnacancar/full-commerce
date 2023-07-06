@@ -24,7 +24,7 @@ function EventCard({ active, data }) {
   };
   return (
     <>
-    {!data && <div className="w-full mt-12 flex justify-center items-center">
+    {!data && <div className="w-full my-12 flex justify-center items-center">
       <p>There is no events yet!</p>
     </div> }
       {data && (

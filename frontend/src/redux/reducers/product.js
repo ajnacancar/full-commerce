@@ -12,13 +12,13 @@ export const productReducer = createReducer(initialState, {
   createProductSuccess: (state, action) => {
     state.isLoading = false;
     state.product = action.payload;
-    state.success = true;
+    state.successCreate = true;
   },
   createProductRejeted: (state, action) => {
     state.error = action.payload;
     state.isLoading = false;
     state.product = null;
-    state.success = false;
+    state.successCreate = false;
   },
 
   //load

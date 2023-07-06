@@ -15,6 +15,7 @@ const payment = require("./controllers/payment");
 const order = require("./controllers/order");
 const conversation = require("./controllers/conversation");
 const message = require("./controllers/message");
+const newsletter = require("./controllers/newsletter");
 
 app.use(express.json());
 app.use(cookieParser());
@@ -44,6 +45,7 @@ app.use("/api/v2/payment", payment);
 app.use("/api/v2/order", order);
 app.use("/api/v2/conversation", conversation);
 app.use("/api/v2/message", message);
+app.use("/api/v2/newsletter", newsletter);
 
 //error handeling
 app.use(ErrorHandler);

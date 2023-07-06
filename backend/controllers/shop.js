@@ -7,10 +7,10 @@ const ErrorHandler = require("../utils/ErrorHandler");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
 const { SHOP_TOKEN } = require("../config/static");
 const { isAuthenticatedShop } = require("../middleware/auth");
+const { sendMail } = require("../utils/sendMail");
 
 router.post("/create-shop", upload.single("file"), async (req, res, next) => {
   try {

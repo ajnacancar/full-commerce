@@ -7,7 +7,7 @@ function ShopCreateProductPage() {
   return (
     <div>
       <DashboardHeader />
-      <div className="flex items-center justify-between w-full">
+      <div className="flex justify-between w-full">
         <div className="800px:w-[330px] w-[80px]">
           <DashboardSidebar active={4} />
         </div>

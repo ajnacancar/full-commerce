@@ -8,7 +8,7 @@ import { createEvent } from "../../redux/actions/event";
 
 function CreateEvent() {
   const { shop } = useSelector((state) => state.shop);
-  const { success, error } = useSelector((state) => state.event);
+  const { successCreated, error } = useSelector((state) => state.event);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [images, setImages] = useState([]);
@@ -78,15 +78,15 @@ function CreateEvent() {
       toast.error(error);
     }
 
-    if (success) {
+    if (successCreated) {
       toast.success("Event created successufuly!");
       navigate("/dashboard");
       window.location.reload(true);
     }
-  }, [error, dispatch, success]);
+  }, [error, dispatch, successCreated]);
 
   return (
-    <div className="800px:w-[50%] w-[90%] bg-white shadow h-[80vh] rounded p-3 overflow-y-scroll">
+    <div className="800px:w-[50%] w-[90%] bg-white shadow h-[80vh] rounded p-3 overflow-y-scroll mt-7">
       <h5 className="text-3xl font-Poppins text-center">Create Event</h5>
 
       {/* create event form */}

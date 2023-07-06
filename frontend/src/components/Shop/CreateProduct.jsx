@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 
 function CreateProduct() {
   const { shop } = useSelector((state) => state.shop);
-  const { success, error } = useSelector((state) => state.product);
+  const { successCreate, error } = useSelector((state) => state.product);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [images, setImages] = useState([]);
@@ -51,15 +51,15 @@ function CreateProduct() {
       toast.error(error);
     }
 
-    if (success) {
+    if (successCreate) {
       toast.success("Product created successufuly!");
       navigate("/dashboard");
       window.location.reload(true);
     }
-  }, [error, dispatch, success]);
+  }, [error, dispatch, successCreate]);
 
   return (
-    <div className="800px:w-[50%] w-[90%] bg-white shadow h-[80vh] rounded p-3 overflow-y-scroll">
+    <div className="800px:w-[50%] w-[90%] bg-white shadow h-[80vh] rounded p-3 overflow-y-scroll mt-7">
       <h5 className="text-3xl font-Poppins text-center">Create Product</h5>
 
       {/* create product form */}

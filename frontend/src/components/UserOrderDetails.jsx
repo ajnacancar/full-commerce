@@ -109,21 +109,14 @@ function UserOrderDetails() {
                     US$ {item.discountPrice} x {item.qty}
                   </div>
                 </div>
-                {item.isReviewed ||
-                item.status !== ORDER_STATUS_DELIVERED ? null : (
-                  <>
-                    {data?.status === ORDER_STATUS_DELIVERED && (
-                      <div
-                        onClick={() => {
-                          setOpen(true) || setSelectedItem(item);
-                        }}
-                        className={`${styles.button} text-white`}
-                      >
-                        Write a review
-                      </div>
-                    )}
-                  </>
-                )}
+                {!item.isReviewed && data?.status === ORDER_STATUS_DELIVERED ?  <div
+                className={`${styles.button} text-white`}
+                onClick={() => setOpen(true) || setSelectedItem(item)}
+              >
+                Write a review
+              </div> : (
+             null
+            )}
               </div>
             ))}
 
@@ -247,7 +240,7 @@ function UserOrderDetails() {
             </div>
           </div>
 
-          <Link to={`/`}>
+          <Link to={`/inbox`}>
             <div className={`${styles.button} text-white`}>Send Message</div>
           </Link>
         </div>
