@@ -1,5 +1,14 @@
 {
+  "name": "full-commerce",
+  "version": "1.0.0",
+  "description": "Full Commerce provide all features of one ecommerce platform.",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"cd backend && npm start\" \"cd socket && npm run start\" \"cd frontend && npm start\""
+  },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "stripe": "^12.9.0"
+    "concurrently": "^8.2.0"
   }
 }
