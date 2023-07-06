@@ -8,6 +8,6 @@ This platform offers everything an e-commerce system needs: product addition, pr
 
 
 How to start:
-1. in folder full-commerce run ### npm i
-2. in folder full-commerce run ### npm run install-all
-3. in folder full-commerce run ### npm start
+1. in folder full-commerce run ## npm i
+2. in folder full-commerce run ## npm run install-all
+3. in folder full-commerce run ## npm start
